@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en-US" ng-app="SecretSanta">
+    <head>
+        <title>Secret Santa</title>
+        <meta charset="UTF-8">
+
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="fonts/fonts.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.1/angular.min.js"></script>
+        <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        <div class="col-md-12 text-center">
+            <h1 class="title">Secret Santa</h1>
+            <img src="img/santa12.png" class="logo-img" alt="Logo Image" />
+        </div>
+
+        <div class="content" ng-controller="SecretSantaController">
+            <div class="col-md-12 col-xs-12">
+                <div class="col-md-6 col-xs-12">
+                    <form name="submit_results" ng-submit="calculateRandomUsers()">
+                        <div class="row">
+                            <div class="col-md-12 col-xs-12">
+                                <fieldset ng-repeat="person in persons">
+                                    <div class="col-md-12 col-xs-12 form-group">
+                                        <label>Person {{$index + 1}}</label>
+                                    </div>
+                                    <div class="col-md-10 col-xs-10 form-group">
+                                        <input class="form-control" type="text" ng-model="person.name" name="name" placeholder="Name and Surname" required/>
+                                        <br>
+                                        <input class="form-control" type="email" ng-model="person.email" name="email" placeholder="Email Address" required/>
+                                    </div>
+                                    <div class="col-md-2 col-xs-2 form-group">
+                                        <button type="button" class="btn btn-default" ng-show="$last" ng-click="removePersons()">
+                                            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </fieldset>
+                                <div class="col-md-12 col-xs-12 form-group">
+                                    <button type="button" class="btn btn-default" ng-click="addNewPersons()">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-xs-12">
+                                <div class="col-md-12 col-xs-12 form-group">
+                                    <button type="submit" class="btn btn-default">
+                                        Get Results
+                                    </button>
+                                    <button type="button" class="btn btn-default" ng-click="resetForm();">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6 col-xs-12">
+                    <div class="alert alert-success" role="alert" ng-show="success">
+                        <strong>Well done!</strong> You successfully sent the Secret Santa results!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="js/secret-santa.js"></script>
+
+        <script type="text/javascript">
+        </script>
+    </body>
+
+</html>

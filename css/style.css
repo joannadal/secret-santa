@@ -1,0 +1,11 @@
+body {
+    font-family: SanFranciscoTextRegular;
+}
+
+.title {
+    font-family: SanFranciscoTextHeavy;
+}
+
+.logo-img {
+    max-width: 180px;
+}
