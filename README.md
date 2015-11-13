@@ -1,2 +1,2 @@
-# calculator-angularjs
-Basic calculator created using AngularJS and Bootstrap.
+# secret-santa
+Web Application to send the results of Secret Santa by email using the MandrillApp.
