@@ -9,6 +9,8 @@ angular.module("SecretSanta", []).controller("SecretSantaController",
         ];
 
         $scope.results = [];
+        $scope.formErrors = false;
+        $scope.emailMessage = "";
         $scope.success = false;
 
         $scope.addNewPersons = function() {
@@ -79,6 +81,18 @@ angular.module("SecretSanta", []).controller("SecretSantaController",
         };
 
         $scope.calculateRandomUsers = function() {
+            $scope.formErrors = false;
+            if ($scope.submitResults.$invalid == true) {
+                $scope.formErrors = true;
+
+                // Scroll where are the errors
+                $('html,body').animate({
+                    scrollTop: $("#step-2").offset().top},
+                    'slow'
+                );
+
+                return;
+            }
             if ($scope.persons.length % 2 !== 0) {
                 alert("You have to use an even number of persons");
                 return;
@@ -138,8 +152,9 @@ angular.module("SecretSanta", []).controller("SecretSantaController",
                 $scope.sendMail(dataPerson2);
             }
 
-            $scope.results = [];
+            $scope.resetForm();
             $scope.success = true;
+            $('#successModal').modal('show');
         };
     }
 );
