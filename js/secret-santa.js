@@ -16,14 +16,12 @@ angular.module("SecretSanta", []).controller("SecretSantaController",
         $scope.addNewPersons = function() {
             var newItemNo = $scope.persons.length + 1;
             $scope.persons.push({ 'id': 'persons' + newItemNo });
-            $scope.persons.push({ 'id': 'persons' + newItemNo+1 });
         };
 
         $scope.removePersons = function() {
             if ($scope.persons.length > 2) {
                 var lastItem = $scope.persons.length-1;
                 $scope.persons.splice(lastItem);
-                $scope.persons.splice(lastItem-1);
             }
         };
 
@@ -36,8 +34,21 @@ angular.module("SecretSanta", []).controller("SecretSantaController",
             ];
 
             $scope.results = [];
+            $scope.formErrors = false;
+            $scope.emailMessage = "";
             $scope.success = false;
         };
+
+        $scope.getRandomArray = function(maxNumber) {
+            var randomArray = [];
+            for (i=0; i < maxNumber; i++) {
+                do {
+                    var randomValue = Math.floor((Math.random() * maxNumber));
+                } while((randomValue == i) || (randomArray.indexOf(randomValue) > -1));
+                randomArray[i] = randomValue;
+            }
+            return randomArray;
+        }
 
         $scope.sendMail = function(data) {
             var mailJSON = {
@@ -46,7 +57,7 @@ angular.module("SecretSanta", []).controller("SecretSantaController",
                     "html": data.mailBody,
                     "text": data.mailBody,
                     "subject": data.subject,
-                    "from_email": "noreply@secretsanta.com",
+                    "from_email": "noreply@privatesanta.com",
                     "from_name": "Secret Santa",
                     "to": [
                         {
@@ -93,67 +104,44 @@ angular.module("SecretSanta", []).controller("SecretSantaController",
 
                 return;
             }
-            if ($scope.persons.length % 2 !== 0) {
-                alert("You have to use an even number of persons");
-                return;
-            }
             var auxPersonsArray = $scope.persons.slice();
             var maxValue = $scope.persons.length;
-            var person1;
-            var person2;
+            var result_name;
+            var email;
             var couple;
-            while (auxPersonsArray.length > 2) {
-                // Get Person1
-                var randomValue = Math.floor((Math.random() * maxValue));
-                person1 = auxPersonsArray[randomValue];
-                auxPersonsArray.splice(randomValue, 1);
 
-                maxValue = auxPersonsArray.length;
+            var auxRandomArray = $scope.getRandomArray(auxPersonsArray.length);
 
-                // Get Person2
-                randomValue = Math.floor((Math.random() * maxValue));
-                person2 = auxPersonsArray[randomValue];
-                auxPersonsArray.splice(randomValue, 1);
+            for (i=0; i < auxPersonsArray.length; i++) {
+                result_name = auxPersonsArray[i].name;
+                randomIndex = auxRandomArray[i];
+                email = auxPersonsArray[randomIndex].email;
 
-                couple = [person1, person2];
-                $scope.results.push(couple);
-            }
-            //Group the last two persons
-            if (auxPersonsArray.length === 2) {
-                person1 = auxPersonsArray[0];
-                auxPersonsArray.splice(0, 1);
-
-                person2 = auxPersonsArray[0];
-                auxPersonsArray.splice(0, 1);
-
-                couple = [person1, person2];
+                couple = [result_name, email];
                 $scope.results.push(couple);
             }
             //Send an email with the result to each person
             for (i = 0; i < $scope.results.length; i++) {
-                namePerson1 = $scope.results[i][0].name;
-                emailPerson1 = $scope.results[i][0].email;
-                namePerson2 = $scope.results[i][1].name;
-                emailPerson2 = $scope.results[i][1].email;
+                nameResult = $scope.results[i][0];
+                emailResult = $scope.results[i][1];
 
-                dataPerson1 = {
-                    "toEmail": emailPerson1,
-                    "mailBody": "Congratulations! Your secret friend is: " + namePerson2,
+                var mailBody = "Congratulations! Your secret friend is: " + nameResult;
+                if ($scope.emailMessage != "") {
+                    mailBody = mailBody.concat(". You received this message: " + $scope.emailMessage);
+                }
+
+                dataResult = {
+                    "toEmail": emailResult,
+                    "mailBody": mailBody,
                     "subject": "Secret Santa Results"
                 };
 
-                dataPerson2 = {
-                    "toEmail": emailPerson2,
-                    "mailBody": "Congratulations! Your secret friend is: " + namePerson1,
-                    "subject": "Secret Santa Results"
-                };
-
-                $scope.sendMail(dataPerson1);
-                $scope.sendMail(dataPerson2);
+                $scope.sendMail(dataResult);
             }
 
             $scope.resetForm();
             $scope.success = true;
+            window.scrollTo(0, 0);
             $('#successModal').modal('show');
         };
     }
